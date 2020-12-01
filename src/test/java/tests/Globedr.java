@@ -23,7 +23,8 @@ public class Globedr {
         globedrLoginPage.loginUser("0392345678", "123456");
         globedrInfoPage.updateInfo();
         DriverUlti.refreshPage();
-        globedrInfoPage.checkInfoAfterUpdate();
+        DriverUlti.backPage();
+//        globedrInfoPage.checkInfoAfterUpdate();
     }
 
     @AfterMethod
