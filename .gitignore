@@ -1,4 +1,4 @@
-.idea/
-.test-output/
-.target/
-.'Quya.iml'/
+.idea
+test-output
+target
+/*.iml
