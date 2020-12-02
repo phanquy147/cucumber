@@ -27,7 +27,7 @@ public class GlobedrInfoPage {
     By dropDownVisitCountry = By.xpath("//label[@translate='visitCountry']/preceding-sibling::select");
     By dropDownCountry = By.xpath("//label[@translate='country']/preceding-sibling::select");
     By btnSave = By.xpath("//a[@translate='save']");
-    By btnImage = By.xpath("//div[contains(@class,'btn-file')]");
+    By iconCamera = By.xpath("//div[contains(@class,'btn-file')]");
     By btnOk = By.xpath("//button[contains(@class,'btn-gdr')]");
     By label = By.xpath("//label");
 
@@ -53,29 +53,39 @@ public class GlobedrInfoPage {
         DriverUlti.waitMinus(3000);
     }
 
-    public void inputName() {
-        nameInput = RandomStringUtils.randomAlphabetic(1, 10);
+    public String randomName() {
+        return nameInput = RandomStringUtils.randomAlphabetic(1, 10);
+    }
+
+    public void inputName(String name) {
         DriverUlti.waitForElement(txtName, time);
         DriverUlti.clear(txtName);
-        DriverUlti.sendKeys(txtName, nameInput);
+        DriverUlti.sendKeys(txtName, name);
     }
 
-    public void inputTitle() {
-        titleInput = RandomStringUtils.randomAlphabetic(8);
+    public String randomTitle() {
+        return titleInput = RandomStringUtils.randomAlphabetic(8);
+    }
+
+    public void inputTitle(String title) {
         DriverUlti.waitForElement(txtTitle, time);
         DriverUlti.clear(txtTitle);
-        DriverUlti.sendKeys(txtTitle, titleInput);
+        DriverUlti.sendKeys(txtTitle, title);
     }
 
-    public void inputEmail() {
+    public String randomEmail (){
         String firstEmail = RandomStringUtils.randomAlphabetic(1, 15);
         String[] arrMail = {"@gmail.com", "@yahoo.com", "@bacsitoancau.com", "@outlook.vn"};
         Random ran = new Random();
         String lastEmail = arrMail[ran.nextInt(arrMail.length)];
-        emailInput = firstEmail + lastEmail;
+        return  emailInput = firstEmail + lastEmail;
+    }
+
+
+    public void inputEmail(String email) {
         DriverUlti.waitForElement(txtEmail, time);
         DriverUlti.clear(txtEmail);
-        DriverUlti.sendKeys(txtEmail, emailInput);
+        DriverUlti.sendKeys(txtEmail, email);
     }
 
     public void inputPhone() {
@@ -97,7 +107,6 @@ public class GlobedrInfoPage {
         String[] arrAddress = {"a", "b", "c", "d"};
         Random ran = new Random();
         String street = arrAddress[ran.nextInt(arrAddress.length)];
-
         DriverUlti.waitForElement(txtAddress, time);
         DriverUlti.clear(txtAddress);
         DriverUlti.sendKeys(txtAddress, numberAddress + street);
@@ -109,14 +118,17 @@ public class GlobedrInfoPage {
         listAddress.get(numberRandom).click();
     }
 
-    public void inputDateOfBirth() throws Exception {
+    public String randomDob() throws Exception {
         int date = randomIntegerInRange(1, 31);
         int month = randomIntegerInRange(1, 12);
         int year = randomIntegerInRange(1900, 2020);
-        dOBInput = calenderUlti.convertDate(String.format("%s/%s/%s", date, month, year));
+       return dOBInput = calenderUlti.convertDate(String.format("%s/%s/%s", date, month, year));
+    }
+
+    public void inputDateOfBirth(String dOB){
         DriverUlti.waitForElement(txtDOB, time);
         DriverUlti.executeJS(txtDOB);
-        DriverUlti.sendKeys(txtDOB, dOBInput);
+        DriverUlti.sendKeys(txtDOB, dOB);
     }
 
     public static int randomIntegerInRange(int min, int max) {
@@ -127,15 +139,18 @@ public class GlobedrInfoPage {
         }
     }
 
-    public void selectGender() {
+    public String randomGender(){
         String[] arrGender = {"male", "female"};
         Random ran = new Random();
-        genderSelect = arrGender[ran.nextInt(arrGender.length)];
+        return genderSelect = arrGender[ran.nextInt(arrGender.length)];
+    }
+
+    public void selectGender(String gender) {
         DriverUlti.waitForElement(dropDownGender, time);
         DriverUlti.click(dropDownGender);
         List<WebElement> listGender = DriverUlti.findElements(By.xpath("//label[@translate='gender']/preceding-sibling::select/option"));
         for (int i = 0; i < listGender.size(); i++) {
-            if (listGender.get(i).getText().equalsIgnoreCase(genderSelect)) {
+            if (listGender.get(i).getText().equalsIgnoreCase(gender)) {
                 listGender.get(i).click();
             }
         }
@@ -149,7 +164,6 @@ public class GlobedrInfoPage {
         listVisitCountry.get(numberRandom).click();
         visitCountrySelect = listVisitCountry.get(numberRandom).getText();
     }
-
 
     public void selectCountry() {
         DriverUlti.waitForElement(dropDownCountry, time);
@@ -178,7 +192,6 @@ public class GlobedrInfoPage {
             }
         }
     }
-
 
 
     public String getRegion() {
@@ -231,8 +244,8 @@ public class GlobedrInfoPage {
     }
 
     public void updateImage() throws IOException {
-        DriverUlti.waitForElement(btnImage, time);
-        DriverUlti.click(btnImage);
+        DriverUlti.waitForElement(iconCamera, time);
+        DriverUlti.click(iconCamera);
 
 //        File file = new File("/Users/apple/Desktop/QUYCANGKHON-01.png");
 //
@@ -305,14 +318,20 @@ public class GlobedrInfoPage {
         return isExis;
     }
 
-    public void updateInfo() throws Exception {
-        goToAccountInfoPage();
+
+    public void updateInfo(String name, String title,String email,String dOB,String gender) throws Exception {
+        fillInfo(name, title,email,dOB,gender);
+        save();
+        DriverUlti.waitMinus(5000);
+    }
+
+    public void fillInfo(String name, String title,String email,String dOB,String gender) throws Exception {
         updateImage();
-        inputName();
-        inputTitle();
-        inputEmail();
-        inputDateOfBirth();
-        selectGender();
+        inputName(name);
+        inputTitle(title);
+        inputEmail(email);
+        inputDateOfBirth(dOB);
+        selectGender(gender);
         selectVisitCountry();
         selectCountry();
         selectRegion();
@@ -320,8 +339,6 @@ public class GlobedrInfoPage {
         inputAddress();
         inputPhone();
         inputWorkPhone();
-        save();
-        DriverUlti.waitMinus(5000);
     }
 
     public void checkInfoAfterUpdate() {
