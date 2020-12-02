@@ -3,6 +3,7 @@ package tests;
 import com.DriverUlti;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import page.GlobedrInfoPage;
 import page.GlobedrLoginPage;
@@ -16,15 +17,22 @@ public class Globedr {
         DriverUlti.getDriverGlobeDr();
     }
 
-    @Test
+    @DataProvider(name = "dataTest")
+    public Object[][] dpProvider() throws Exception {
+        return new Object[][]{{"0392345678", "123456", globedrInfoPage.randomName(), globedrInfoPage.randomTitle(), globedrInfoPage.randomEmail(),
+                globedrInfoPage.randomDob(), globedrInfoPage.randomGender()}};
+    }
+
+    @Test(dataProvider = "dataTest")
 //            (invocationCount = 5)
-    public void updateInfo() throws Exception {
-        DriverUlti.getWebInfo();
-        globedrLoginPage.loginUser("0392345678", "123456");
-        globedrInfoPage.updateInfo();
-        DriverUlti.refreshPage();
-        DriverUlti.backPage();
-//        globedrInfoPage.checkInfoAfterUpdate();
+    public void updateInfo(String ID, String password, String name, String title, String email, String dOB, String gender) throws Exception {
+//        DriverUlti.getWebInfo();
+//        DriverUlti.refreshPage();
+//        DriverUlti.backPage();
+        globedrLoginPage.loginUser(ID, password);
+        globedrInfoPage.goToAccountInfoPage();
+        globedrInfoPage.updateInfo(name, title, email, dOB, gender);
+        globedrInfoPage.checkInfoAfterUpdate();
     }
 
     @AfterMethod
