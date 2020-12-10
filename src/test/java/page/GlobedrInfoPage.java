@@ -3,12 +3,21 @@ package page;
 import com.CalenderUlti;
 import com.DriverUlti;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GlobedrInfoPage {
@@ -73,12 +82,12 @@ public class GlobedrInfoPage {
         DriverUlti.sendKeys(txtTitle, title);
     }
 
-    public String randomEmail (){
+    public String randomEmail() {
         String firstEmail = RandomStringUtils.randomAlphabetic(1, 15);
         String[] arrMail = {"@gmail.com", "@yahoo.com", "@bacsitoancau.com", "@outlook.vn"};
         Random ran = new Random();
         String lastEmail = arrMail[ran.nextInt(arrMail.length)];
-        return  emailInput = firstEmail + lastEmail;
+        return emailInput = firstEmail + lastEmail;
     }
 
 
@@ -122,10 +131,10 @@ public class GlobedrInfoPage {
         int date = randomIntegerInRange(1, 31);
         int month = randomIntegerInRange(1, 12);
         int year = randomIntegerInRange(1900, 2020);
-       return dOBInput = calenderUlti.convertDate(String.format("%s/%s/%s", date, month, year));
+        return dOBInput = calenderUlti.convertDate(String.format("%s/%s/%s", date, month, year));
     }
 
-    public void inputDateOfBirth(String dOB){
+    public void inputDateOfBirth(String dOB) {
         DriverUlti.waitForElement(txtDOB, time);
         DriverUlti.executeJS(txtDOB);
         DriverUlti.sendKeys(txtDOB, dOB);
@@ -139,7 +148,7 @@ public class GlobedrInfoPage {
         }
     }
 
-    public String randomGender(){
+    public String randomGender() {
         String[] arrGender = {"male", "female"};
         Random ran = new Random();
         return genderSelect = arrGender[ran.nextInt(arrGender.length)];
@@ -156,22 +165,70 @@ public class GlobedrInfoPage {
         }
     }
 
-    public void selectVisitCountry() {
+//    public int countLine(String fileName) throws FileNotFoundException {
+//        File file = new File(fileName);
+//        Scanner scanner = new Scanner(file);
+//        int count = 0;
+//        while (scanner.hasNextLine()) {
+//            scanner.nextLine();
+//            count++;
+//        }
+//        return count - 1;
+//    }
+//
+//    public String readFileVisitCountry(String fileName) throws FileNotFoundException {
+//        File file = new File(fileName);
+//        Scanner scanner = new Scanner(file);
+//        numberRandom = randomIntegerInRange(0, countLine(fileName));
+//        int i = 0;
+//        String visitCountryName = null;
+//        while (scanner.hasNextLine()) {
+//            visitCountryName = scanner.nextLine();
+//            i++;
+//            if (i == numberRandom) {
+//                return visitCountryName;
+//            }
+//        }
+//        return visitCountryName;
+//    }
+
+    public static String randomValueOfFile(String fileName) throws IOException, ParseException {
+        JSONParser jsonParser = new JSONParser();
+        FileReader reader = new FileReader(fileName);
+        Object obj = jsonParser.parse(reader);
+        JSONObject object = (JSONObject) obj;
+        JSONArray array = (JSONArray) object.get("data");
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject country = (JSONObject) array.get(i);
+            arrayList.add((String) country.get("name"));
+        }
+        String countryName = arrayList.get(randomIntegerInRange(0, arrayList.size()));
+        return countryName;
+    }
+
+    public void selectVisitCountry(String visitCountry) {
         DriverUlti.waitForElement(dropDownVisitCountry, time);
         DriverUlti.click(dropDownVisitCountry);
         List<WebElement> listVisitCountry = DriverUlti.findElements(By.xpath("//label[@translate='visitCountry']/preceding-sibling::select/option"));
-        numberRandom = randomIntegerInRange(0, listVisitCountry.size() - 1);
-        listVisitCountry.get(numberRandom).click();
-        visitCountrySelect = listVisitCountry.get(numberRandom).getText();
+        for (int i = 0; i < listVisitCountry.size(); i++) {
+            if (listVisitCountry.get(i).getText().equalsIgnoreCase(visitCountry)) {
+                listVisitCountry.get(i).click();
+                visitCountrySelect = listVisitCountry.get(i).getText();
+            }
+        }
     }
 
-    public void selectCountry() {
+    public void selectCountry(String country) {
         DriverUlti.waitForElement(dropDownCountry, time);
         DriverUlti.click(dropDownCountry);
         List<WebElement> listCountry = DriverUlti.findElements(By.xpath("//label[@translate='country']/preceding-sibling::select/option"));
-        numberRandom = randomIntegerInRange(0, listCountry.size() - 1);
-        listCountry.get(numberRandom).click();
-        countrySelect = listCountry.get(numberRandom).getText();
+        for (int i = 0; i < listCountry.size(); i++) {
+            if (listCountry.get(i).getText().equalsIgnoreCase(country)) {
+                listCountry.get(i).click();
+                countrySelect = listCountry.get(i).getText();
+            }
+        }
     }
 
     public void selectRegion() {
@@ -319,21 +376,21 @@ public class GlobedrInfoPage {
     }
 
 
-    public void updateInfo(String name, String title,String email,String dOB,String gender) throws Exception {
-        fillInfo(name, title,email,dOB,gender);
+    public void updateInfo(String name, String title, String email, String dOB, String gender, String visitCountry, String country) throws Exception {
+        fillInfo(name, title, email, dOB, gender, visitCountry, country);
         save();
         DriverUlti.waitMinus(5000);
     }
 
-    public void fillInfo(String name, String title,String email,String dOB,String gender) throws Exception {
+    public void fillInfo(String name, String title, String email, String dOB, String gender, String visitCountry, String country) throws Exception {
         updateImage();
         inputName(name);
         inputTitle(title);
         inputEmail(email);
         inputDateOfBirth(dOB);
         selectGender(gender);
-        selectVisitCountry();
-        selectCountry();
+        selectVisitCountry(visitCountry);
+        selectCountry(country);
         selectRegion();
         selectCity();
         inputAddress();
