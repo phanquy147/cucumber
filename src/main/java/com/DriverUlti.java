@@ -129,6 +129,13 @@ public class DriverUlti {
         driver.manage().window().maximize();
     }
 
+
+    public static void getLink(String url) {
+        setDriver(runDriver);
+        driver.navigate().to(url);
+        driver.manage().window().maximize();
+    }
+
     public static void getDriverDemoQa() {
         setDriver(runDriver);
         driver.get("https://demoqa.com");

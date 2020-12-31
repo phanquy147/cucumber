@@ -2,26 +2,37 @@ package page;
 
 import com.CalenderUlti;
 import com.DriverUlti;
+import com.ImageUlti;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GlobedrInfoPage {
     CalenderUlti calenderUlti = new CalenderUlti();
+    ImageUlti imageUlti = new ImageUlti();
 
     By btnAccount = By.xpath("//a[@href='/profile/info']");
     By txtName = By.xpath("//label[@translate='yourName']/preceding-sibling::input");
@@ -39,6 +50,8 @@ public class GlobedrInfoPage {
     By iconCamera = By.xpath("//div[contains(@class,'btn-file')]");
     By btnOk = By.xpath("//button[contains(@class,'btn-gdr')]");
     By label = By.xpath("//label");
+    By avatar = By.xpath("//div[contains(@style,'background-image')]");
+    By img = By.xpath("//img");
 
     int time = 60;
     String value = "value";
@@ -54,6 +67,7 @@ public class GlobedrInfoPage {
     String visitCountrySelect;
     String addressInput;
     String citySelect;
+    String linkUrl;
     int numberRandom;
 
     public void goToAccountInfoPage() {
@@ -380,6 +394,42 @@ public class GlobedrInfoPage {
         fillInfo(name, title, email, dOB, gender, visitCountry, country);
         save();
         DriverUlti.waitMinus(5000);
+    }
+
+    public String getAvatarLink() {
+        DriverUlti.waitForElement(avatar, time);
+        String ava = DriverUlti.getAttribute(avatar, "style");
+        String url = "(\"(.*?)\")";
+        Pattern pattern = Pattern.compile(url);
+        Matcher matcher = pattern.matcher(ava);
+        if (matcher.find()) {
+            linkUrl = matcher.group().replaceAll("\"", "");
+        }
+        System.out.println("link: " + linkUrl);
+        return linkUrl;
+    }
+
+//    public void openLinkImage() {
+//        getAvatarLink();
+//        DriverUlti.getLink(linkUrl);
+//    }
+
+
+    public void downloadImg() {
+//        openLinkImage();
+//        imageUlti.saveFileFromUrl(getAvatarLink(), "/Users/apple/Desktop/quynho.JPG");
+        try {
+            FileUtils.copyURLToFile(new URL(getAvatarLink()), new File("/Users/apple/Desktop/quynho.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void compareImg() throws IOException {
+        File fileA = new File("/Users/apple/Desktop/image001.jpg");
+        File fileB = new File("/Users/apple/Desktop/quynho.jpg");
+        imageUlti.compareWithImage(fileA,fileB);
+        imageUlti.compareSizeImage(fileA,fileB);
     }
 
     public void fillInfo(String name, String title, String email, String dOB, String gender, String visitCountry, String country) throws Exception {

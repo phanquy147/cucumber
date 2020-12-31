@@ -36,6 +36,8 @@ public class Globedr {
         globedrInfoPage.goToAccountInfoPage();
         globedrInfoPage.updateInfo(name, title, email, dOB, gender, visitCountry, country);
         globedrInfoPage.checkInfoAfterUpdate();
+        globedrInfoPage.downloadImg();
+        globedrInfoPage.compareImg();
     }
 
     @AfterMethod
