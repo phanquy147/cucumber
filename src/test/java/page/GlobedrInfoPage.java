@@ -354,7 +354,9 @@ public class GlobedrInfoPage {
 //        robot.keyPress(KeyEvent.VK_ENTER);
 //        robot.keyRelease(KeyEvent.VK_ENTER);
 //        robot.delay(500);
-        Runtime.getRuntime().exec("osascript " + "/Users/apple/Desktop/upload.scpt");
+        String aaa = "/Users/apple/Desktop/QUYCANGKHON-01.png";
+        String[] commands = {"osascript", "/Users/apple/Desktop/upload.scpt", aaa};
+        Runtime.getRuntime().exec(commands);
 //        upImage();
         DriverUlti.waitForElementVisibility(btnOk, time);
         DriverUlti.click(btnOk);
@@ -417,7 +419,7 @@ public class GlobedrInfoPage {
 
     public void downloadImg() {
 //        openLinkImage();
-//        imageUlti.saveFileFromUrl(getAvatarLink(), "/Users/apple/Desktop/quynho.JPG");
+        imageUlti.saveFileFromUrl(getAvatarLink(), "/Users/apple/Desktop/quynho.JPG");
         try {
             FileUtils.copyURLToFile(new URL(getAvatarLink()), new File("/Users/apple/Desktop/quynho.jpg"));
         } catch (IOException e) {

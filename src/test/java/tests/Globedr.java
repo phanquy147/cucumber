@@ -25,13 +25,11 @@ public class Globedr {
     }
 
     @Test(dataProvider = "dataTest")
-//            (invocationCount = 5)
+//    (invocationCount = 5)
     public void updateInfo(String ID, String password, String name, String title, String email, String dOB, String gender, String visitCountry, String country) throws Exception {
 //        DriverUlti.getWebInfo();
 //        DriverUlti.refreshPage();
 //        DriverUlti.backPage();
-
-
         globedrLoginPage.loginUser(ID, password);
         globedrInfoPage.goToAccountInfoPage();
         globedrInfoPage.updateInfo(name, title, email, dOB, gender, visitCountry, country);
