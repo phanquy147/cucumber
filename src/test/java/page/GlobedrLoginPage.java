@@ -12,7 +12,7 @@ public class GlobedrLoginPage {
     By btnSignIn2 = By.xpath("//button[@translate='signIn']");
     By btnSignIn = By.xpath("//a[@translate='signIn']");
     By dropCountry = By.xpath("//select");
-    int time = 90;
+    int time = 60;
 
     public void goToLoginPage() {
         DriverUlti.waitForElement(btnSignIn, time);
@@ -34,7 +34,7 @@ public class GlobedrLoginPage {
     public void selectCountry() {
         DriverUlti.waitForElementVisibility(dropCountry, time);
         DriverUlti.click(dropCountry);
-        List<WebElement> listCountry =  DriverUlti.findElements(By.xpath("//select/option"));
+        List<WebElement> listCountry = DriverUlti.findElements(By.xpath("//select/option"));
         for (int i = 0; i < listCountry.size(); i++) {
             if (listCountry.get(i).getText().contains("viet nam")) {
                 listCountry.get(i).click();
@@ -43,7 +43,7 @@ public class GlobedrLoginPage {
     }
 
     public void signIn() {
-        DriverUlti.waitForElementVisibility(btnSignIn2, time);
+        DriverUlti.waitForElement(btnSignIn2, time);
         DriverUlti.click(btnSignIn2);
     }
 
@@ -55,5 +55,4 @@ public class GlobedrLoginPage {
         selectCountry();
         signIn();
     }
-
 }

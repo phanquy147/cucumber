@@ -31,9 +31,7 @@ public class Login {
     public void login(String userID, String pass, String userName) {
         login.Login(userID,pass,userName);
         login.clickBtnLogin();
-
         login.checkLogin(userID,pass);
-
     }
 
     @Test (dataProvider = "dataTestSort")

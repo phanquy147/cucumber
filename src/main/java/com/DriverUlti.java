@@ -1,5 +1,6 @@
 package com;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -9,7 +10,15 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategy;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +60,12 @@ public class DriverUlti {
     public static void getDriverLogin() {
         setDriver(runDriver);
         driver.get("http://www.way2automation.com/angularjs-protractor/registeration/#/login");
+    }
+
+    public static void getDriverSelenium() {
+        setDriver(runDriver);
+        driver.get("https://www.seleniumeasy.com/test/drag-and-drop-demo.html");
+        driver.manage().window().maximize();
     }
 
     public static void getDriverProfile() {
@@ -104,17 +119,17 @@ public class DriverUlti {
         driver.get("https://demoqa.com/date-picker");
     }
 
-    public static void getWebInfo(){
+    public static void getWebInfo() {
         driver.getCurrentUrl();
         System.out.println(driver.getCurrentUrl());
         System.out.println(driver.getTitle());
     }
 
-    public static void backPage(){
+    public static void backPage() {
         driver.navigate().back();
     }
 
-    public static void refreshPage(){
+    public static void refreshPage() {
         driver.navigate().refresh();
     }
 
@@ -319,7 +334,6 @@ public class DriverUlti {
         actions.moveToElement(findElement(by)).build().perform();
     }
 
-
     public static void dragAndDrop(By dragElement, By dropElement) {
         Actions actions = new Actions(driver);
         actions.clickAndHold(findElement(dragElement))
@@ -378,10 +392,10 @@ public class DriverUlti {
     }
 
     public static void executeJS(By by) {
-
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].value = '';", findElement(by));
     }
+
 
 //    public static void scrollDownJS(){
 //        JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -403,5 +417,16 @@ public class DriverUlti {
         return icon;
     }
 
-
+    public static void takeShot(String fileWithPath) {
+//      Screenshot scrShot = new AShot().takeScreenshot(driver);
+//      ImageIO.write(scrShot.getImage(), "png", new File(fileWithPath));
+        TakesScreenshot scrShot = ((TakesScreenshot) driver);
+        File scrShotFile = scrShot.getScreenshotAs(OutputType.FILE);
+        File destFile = new File(fileWithPath);
+        try {
+            FileUtils.copyFile(scrShotFile, destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
