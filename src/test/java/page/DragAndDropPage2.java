@@ -1,49 +1,86 @@
 package page;
 
 import com.DriverUlti;
-import javafx.scene.input.MouseDragEvent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class DragAndDropPage2 {
     By dragElement = By.xpath("//div[@id='todrag']/span[@draggable='true']");
-    By dropZone = By.id("mydropzone");
+    By dropZoneElement = By.id("mydropzone");
+    By dropElement = By.xpath("//div[@id='droppedlist']/span");
+    int time = 60;
 
-    public void dragAndDrop2(String ok) {
-        Point drop = DriverUlti.findElement(dropZone).getLocation();
-        int x = drop.getX();
-        int y = drop.getY();
+    public int getXStart(String text) {
+        int xStart = 0;
+        DriverUlti.waitForElement(dragElement, time);
         List<WebElement> listDrag = DriverUlti.findElements(dragElement);
+        for (int i = 0; i < listDrag.size(); i++) {
+            if (listDrag.get(i).getText().equalsIgnoreCase(text)) {
+                Point drag = listDrag.get(i).getLocation();
+                xStart = drag.getX();
+            }
+        }
+        return xStart;
+    }
+
+    public int getYStart(String text) {
+        DriverUlti.waitForElement(dragElement, time);
+        int yStart = 0;
+        List<WebElement> listDrag = DriverUlti.findElements(dragElement);
+        for (int i = 0; i < listDrag.size(); i++) {
+            if (listDrag.get(i).getText().equalsIgnoreCase(text)) {
+                Point drag = listDrag.get(i).getLocation();
+                yStart = drag.getY();
+            }
+        }
+        return yStart;
+    }
+
+    public int getXEnd() {
+        DriverUlti.waitForElement(dropZoneElement, time);
+        Point drop = DriverUlti.findElement(dropZoneElement).getLocation();
+        int xEnd = drop.getX();
+        return xEnd;
+    }
+
+    public int getYEnd() {
+        DriverUlti.waitForElement(dropZoneElement, time);
+        Point drop = DriverUlti.findElement(dropZoneElement).getLocation();
+        int yEnd = drop.getY();
+        return yEnd;
+    }
+
+
+    public void dragAndDrop2(String text) {
         Robot robot = null;
         try {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < listDrag.size(); i++) {
-            if (listDrag.get(i).getText().equalsIgnoreCase(ok)) {
-                Point drag = listDrag.get(i).getLocation();
-                int x1 = drag.getX();
-                int y1 = drag.getY();
-                robot.mouseMove(x1 + 100, y1 + 120);
-                DriverUlti.waitMinus(3000);
-                robot.mousePress(InputEvent.BUTTON1_MASK);
-                DriverUlti.waitMinus(3000);
-                robot.mouseMove(x + 160, y + 180);
-                DriverUlti.waitMinus(3000);
-                robot.mouseRelease(InputEvent.BUTTON1_MASK);
-//                robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-//                robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-                DriverUlti.waitMinus(3000);
-            }
+        robot.mouseMove((int) (getXStart(text) + DriverUlti.jsWidth()), (int) (getYStart(text) + DriverUlti.jsHeight()));
+        DriverUlti.waitMinus(1000);
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        DriverUlti.waitMinus(1000);
+        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        DriverUlti.waitMinus(1000);
+        robot.mouseMove((int) (getXEnd() + DriverUlti.jsWidth()), (int) (getYEnd() + DriverUlti.jsHeight()));
+        DriverUlti.waitMinus(1000);
+        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        DriverUlti.waitMinus(3000);
+    }
+
+    public String txtAfterDrop() {
+        String dropText = null;
+        DriverUlti.waitForElement(dropElement, time);
+        List<WebElement> listDrop = DriverUlti.findElements(dropElement);
+        for (int i = 0; i < listDrop.size(); i++) {
+            dropText = listDrop.get(i).getText().toLowerCase();
         }
+        return dropText;
     }
 }

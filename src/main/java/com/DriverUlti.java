@@ -10,14 +10,8 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import ru.yandex.qatools.ashot.AShot;
-import ru.yandex.qatools.ashot.Screenshot;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategy;
 
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -402,6 +396,19 @@ public class DriverUlti {
 //        js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 //    }
 
+    public static long jsHeight(){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        long offsetY = (long) js.executeScript("return window.screenY + (window.outerHeight - window.innerHeight)");
+        return offsetY;
+//        - window.scrollY;
+    }
+
+    public static long jsWidth(){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        long offsetX = (long) js.executeScript("return window.screenX + (window.outerWidth - window.innerWidth)");
+        return offsetX;
+//        / 2- window.scrollX;
+    }
     public static void scrollToViewJs(By by) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView();", findElement(by));
