@@ -3,9 +3,12 @@ package com;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -30,7 +33,11 @@ public class DriverUlti {
         return driver;
     }
 
-    private static void setDriver(String key) {
+    public static void manageDriver() {
+        driver.manage().window().maximize();
+    }
+
+    public static void setDriver(String key) {
         switch (key) {
             case "edge":
                 System.setProperty("webdriver.edge.driver", System.getProperty("user.dir") + "/driver/msedgedriver");
@@ -53,7 +60,7 @@ public class DriverUlti {
 
     public static void getDriverLogin() {
         setDriver(runDriver);
-        driver.get("http://www.way2automation.com/angularjs-protractor/registeration/#/login");
+        getDriver().get("http://www.way2automation.com/angularjs-protractor/registeration/#/login");
     }
 
     public static void getDriverSelenium() {
@@ -152,7 +159,7 @@ public class DriverUlti {
     }
 
     public static WebElement findElement(By by) {
-        return driver.findElement(by);
+        return getDriver().findElement(by);
     }
 
     public static List<WebElement> findElements(By by) {
@@ -198,7 +205,7 @@ public class DriverUlti {
 
     public static void clickRadioBtn(By by, String value, String attribute) {
         list = findElements(by);
-        for (int i = 0; i < list.size(); i++) {
+        for ( int i = 0; i < list.size(); i++ ) {
             if (list.get(i).getAttribute(attribute).equalsIgnoreCase(value)) {
                 list.get(i).click();
                 System.out.println(list.get(i).isSelected());
@@ -229,6 +236,10 @@ public class DriverUlti {
 
     public static void acceptAlert() {
         driver.switchTo().alert().accept();
+    }
+
+    public static void dismissAlert() {
+        driver.switchTo().alert().dismiss();
     }
 
     public static void waitForElement(By by, int seconds) {
@@ -307,7 +318,7 @@ public class DriverUlti {
 
     public static void clickChB(By by) {
         list = findElements(by);
-        for (int i = 0; i < list.size(); i++) {
+        for ( int i = 0; i < list.size(); i++ ) {
             if (!(list.get(i).isSelected())) {
                 list.get(i).click();
             }
@@ -316,12 +327,13 @@ public class DriverUlti {
 
     public static void unclickChB(By by) {
         list = findElements(by);
-        for (int i = 0; i < list.size(); i++) {
+        for ( int i = 0; i < list.size(); i++ ) {
             if (list.get(i).isSelected()) {
                 list.get(i).click();
             }
         }
     }
+
 
     public static void moveToElement(By by) {
         Actions actions = new Actions(driver);
@@ -363,7 +375,7 @@ public class DriverUlti {
     public static void slideToPoint(By by, String attribute, int x) {
         Actions actions = new Actions(driver);
         if (Integer.parseInt(getAttribute(by, attribute)) == 0) {
-            for (int i = 0; i < x; i++) {
+            for ( int i = 0; i < x; i++ ) {
                 actions.sendKeys(Keys.ARROW_UP).perform();
             }
         }
@@ -372,7 +384,7 @@ public class DriverUlti {
     public static void sliderToStartPoint(By by, String attribute) {
         Actions actions = new Actions(driver);
         if (Integer.parseInt(getAttribute(by, attribute)) > 0) {
-            for (int i = Integer.parseInt(getAttribute(by, attribute)); i >= 0; i--) {
+            for ( int i = Integer.parseInt(getAttribute(by, attribute)); i >= 0; i-- ) {
                 actions.sendKeys(Keys.ARROW_DOWN).perform();
             }
         }
@@ -396,19 +408,20 @@ public class DriverUlti {
 //        js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
 //    }
 
-    public static long jsHeight(){
+    public static long jsHeight() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         long offsetY = (long) js.executeScript("return window.screenY + (window.outerHeight - window.innerHeight)");
         return offsetY;
 //        - window.scrollY;
     }
 
-    public static long jsWidth(){
+    public static long jsWidth() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         long offsetX = (long) js.executeScript("return window.screenX + (window.outerWidth - window.innerWidth)");
         return offsetX;
 //        / 2- window.scrollX;
     }
+
     public static void scrollToViewJs(By by) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView();", findElement(by));
@@ -436,4 +449,26 @@ public class DriverUlti {
             e.printStackTrace();
         }
     }
+
+//    public static void setDriverChromeHeadless() {
+//        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/driver/chromedriver");
+//        ChromeOptions option = new ChromeOptions();
+//        option.setHeadless(true);
+//        driver = new ChromeDriver(option);
+//    }
+
+//    public static void getaaa() {
+//        setDriverChromeHeadless();
+//        driver.manage().window().fullscreen();
+//        driver.get("https://www.seleniumeasy.com/test/drag-and-drop-demo.html");
+//    }
+
+//    public static void setDriverChromeCertificate() {
+//        DesiredCapabilities ch = DesiredCapabilities.chrome();
+//        ch.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+//        ch.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+//        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/driver/chromedriver");
+//        WebDriver driver = new ChromeDriver(ch);
+//        driver.get("");
+//    }
 }

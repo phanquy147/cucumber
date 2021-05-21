@@ -12,6 +12,7 @@ public class DragAndDropPage2 {
     By dragElement = By.xpath("//div[@id='todrag']/span[@draggable='true']");
     By dropZoneElement = By.id("mydropzone");
     By dropElement = By.xpath("//div[@id='droppedlist']/span");
+    By logoElement = By.xpath("//div[@class='logo']//img");
     int time = 60;
 
     public int getXStart(String text) {
@@ -54,6 +55,10 @@ public class DragAndDropPage2 {
         return yEnd;
     }
 
+    public void clickLogo(){
+        DriverUlti.waitForElement(logoElement,time);
+        DriverUlti.click(logoElement);
+    }
 
     public void dragAndDrop2(String text) {
         Robot robot = null;
@@ -62,7 +67,7 @@ public class DragAndDropPage2 {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        robot.mouseMove((int) (getXStart(text) + DriverUlti.jsWidth()), (int) (getYStart(text) + DriverUlti.jsHeight()));
+        robot.mouseMove((int) (getXStart(text) + DriverUlti.jsWidth())+12, (int) (getYStart(text) + DriverUlti.jsHeight()));
         DriverUlti.waitMinus(1000);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         DriverUlti.waitMinus(1000);
@@ -76,7 +81,8 @@ public class DragAndDropPage2 {
 
     public String txtAfterDrop() {
         String dropText = null;
-        DriverUlti.waitForElement(dropElement, time);
+        DriverUlti.waitMinus(5000);
+        DriverUlti.waitForElementVisibility(dropElement, time);
         List<WebElement> listDrop = DriverUlti.findElements(dropElement);
         for (int i = 0; i < listDrop.size(); i++) {
             dropText = listDrop.get(i).getText().toLowerCase();

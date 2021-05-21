@@ -11,12 +11,15 @@ public class DragAndDrop2 {
     DragAndDropPage2 dragAndDropPage2 = new DragAndDropPage2();
     @BeforeMethod
     public void getDriver(){
+
         DriverUlti.getDriverSelenium();
+//        DriverUlti.getaaa();
     }
     @Test
     public void dragAndDrop2() {
-        dragAndDropPage2.dragAndDrop2("draggable 2");
-        Assert.assertEquals(dragAndDropPage2.txtAfterDrop(),"draggable 2");
+        dragAndDropPage2.dragAndDrop2("draggable 1");
+        Assert.assertEquals(dragAndDropPage2.txtAfterDrop(),"draggable 1");
+        dragAndDropPage2.clickLogo();
     }
 
     @AfterMethod

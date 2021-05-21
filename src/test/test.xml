@@ -1,13 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="Suite" verbose="1">
-    <listeners>
-        <listener class-name="com.ListenerTest">
-        </listener>
-    </listeners>
+<!--    <listeners>-->
+<!--        <listener class-name="com.ListenerTest">-->
+<!--        </listener>-->
+<!--    </listeners>-->
     <test name="FirstTest">
         <classes>
-            <class name="tests.DragAndDrop2"/>
+            <class name="tests.checkTBAndLBTest"/>
         </classes>
 
     </test>
